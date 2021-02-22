@@ -18,6 +18,7 @@ package requester
 import (
 	"bytes"
 	"crypto/tls"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -186,6 +187,19 @@ func (b *Work) makeRequest(c *http.Client) {
 	if err == nil {
 		size = resp.ContentLength
 		code = resp.StatusCode
+
+		/////////////////////////////////////
+		if code != 200 {
+			bytes, err := ioutil.ReadAll(resp.Body)
+			fmt.Println(code)
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				fmt.Println(string(bytes))
+			}
+		}
+		/////////////////////////////////////
+
 		io.Copy(ioutil.Discard, resp.Body)
 		resp.Body.Close()
 	}
